@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pinterest Downloader by Juraji - Main Window</title>
+  <link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>Using Pinterest Downloader</h1>
+<p>Pinterest Downloader is able to download all the pins on your Pinterest boards.</p>
+
+<h2 id="important-notice">Important Notice</h2>
+<p>
+  Pinterest Downloader does not use a database or alike to store information on already downloaded files.<br/>
+  Instead it prepends a unique id to the start of all filenames.<br/>
+  You are free to rename any file, created by Pinterest Downloader, as long as this id stays intact.
+</p>
+
+<h2 id="aquiring-token">Aquiring a Pinterest Api Access Token</h2>
+<p>
+  In order to be able to retrieve your pins from Pinterest Pinterest Downloader needs an access token.<br/>
+  Below are the steps necessary to aquire a Pinterest Access Token.
+</p>
+<ol>
+  <li>Log on to <a href="https://pinterest.com" target="_blank">Pinterest</a>.</li>
+  <li>Navigate to the <a href="https://developers.pinterest.com/tools/access_token" target="_blank">Token generator</a>.
+  </li>
+  <li>Make sure to check <span class="bold">read_public</span>. The other checkboxes can be left alone.</li>
+  <li>Click <span class="bold">Generate Token</span>.</li>
+  <li>Copy the string of characters that appear in the text box.</li>
+  <li>Paste this string into the <span class="bold">Pinterest Api Access Token</span> field of the Pinterest Downloader application.
+  </li>
+</ol>
+
+<h2 id="before-starting">Before Clicking start</h2>
+<p>Pinterest Downloader allows you to setup what to do during and after processing.</p>
+
+<h3 id="field-target-dir">Field: Target Download Directory</h3>
+<p>
+  This is the directory to which Pinterest Downloader will download your pins.<br/>
+  To change the directory simply click <span class="bold">Change...</span> and use the shown browser to
+  point to the correct directory and click <span class="bold">Open</span>.
+</p>
+
+<h3 id="field-download-boards">Check Box: Download Boards</h3>
+<p>
+  Unchecking this option will not download any pins. This is applicable when you just want Pinterest Downloader to check the files
+  in the target directory for the correct extensions.
+</p>
+
+<h3 id="field-check-files">Check Box: Scan Files Types</h3>
+<p>
+  Pinterest has the tendency to use the incorrect file type for files.<br/>
+  For instance GIF files could be returned as JPEG files, rendering them unopenable or not-animated.<br/>
+  Leaving this check box checked will have Pinterest Downloader automatically check and correct these files.
+</p>
+
+<h3 id="field-open-target">Check Box: Open Target Directory on Completion</h3>
+<p>
+  Leaving this check box checked will open the target directory on completion.
+</p>
+
+<h2 id="what-happens">What exactly happens when I press start?</h2>
+<p>
+  Assuming you are using the default settings and entered a valid access token, Pinterest Downloader will start doing the following:
+</p>
+<ol>
+  <li>
+    Download Boards<br/>
+    <ol>
+      <li>Fetch information on your Pinterest boards</li>
+      <li>
+        For each board the following process occurs:<br/>
+        <ol>
+          <li>Retrieve information on all pins on the board</li>
+          <li>Create a directory, within the chosen target directory</li>
+          <li>Start downloading all pin images to above directory, any already downloaded image will be skipped</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li>
+    Check downloaded images for correct filetype<br/>
+    <ol>
+      <li>List all files in the target directory</li>
+      <li>Start checking each file and correct it's filename if nessecary</li>
+    </ol>
+  </li>
+  <li>Open the target directory in the OS's file browser</li>
+</ol>
+</body>
+</html>

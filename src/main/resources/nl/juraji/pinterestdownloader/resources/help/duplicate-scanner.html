@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pinterest Downloader by Juraji - The Duplicates Scanner</title>
+  <link rel="stylesheet" href="help.css">
+</head>
+<body>
+<h1>The Duplicates Scanner</h1>
+<p>
+  Even tho Pinterest does tell you wether a pin is already on one of your boards, duplicates could still happen.<br/>
+  For instance when images get pinned two times, two users pinning the same image, creating two seperate pins.
+</p>
+<p>
+  The Duplicates Scanner can be found via the main menu under <span class="bold">Duplicates -&gt; Open Duplicates Scanner</span>.
+  The dialog can be closed at any time by clicking the <span class="bold">I'm Done</span> button at the lower right or
+  the close button of the dialog.
+</p>
+
+<h2>Setting Scanner Options</h2>
+<p>
+  The scanner has two settings, which will influence how duplicate images will get scanned.
+</p>
+<ol>
+  <li>
+    <span class="bold">Similarity</span>
+    <p>
+      The slider, in the lower left of the scanner dialog, controls the sensitivity of the scanner.<br/>
+      Higher values will make the scanner more sensitive, resulting in a less strict comparison.<br/>
+      Lower values will make the scanner more restrictive, making the scanner pay more attention to detail.
+    </p>
+    <p>
+      For the best results it's best to run the scanner multiple times adjusting the slider to make the results more
+      reliable.
+    </p>
+  </li>
+  <li>
+    <span class="bold">Multithreaded Scanning</span>
+    <p>
+      By default the scanner will process multiple images at the same time, depending on the cores available on your
+      machine. This greatly improves the scanner's speed, but also puts more load on your machine.
+    </p>
+    <p>Turn this setting off if you are experiencing performance issues when using the scanner.</p>
+  </li>
+</ol>
+
+<h2>Scan Results</h2>
+<p>
+  Pressing <span class="bold">Start Scan</span> will start scanning each board directory for duplicate images.<br/>
+  You can stop this process at any time by pressing <span class="bold">Stop Scan</span>. Note that the scanner will
+  finish the current board before aborting.<br/>
+  Closing the scanner dialog will also stop the scanner.
+</p>
+<p>
+  During the scan filenames will start to appear in the left pane.<br/>
+  These filenames are images of which duplicates have been found.<br/>
+</p>
+<p>
+  You can click on a filename in the left pane to view it's duplicates.<br/>
+  On the right a list of previews will appear. The first item is the image with the best quality. Any items below the
+  first item are duplicates or similar to the first item.<br/>
+</p>
+<p>
+  You can select items you want to delete in the right pane by clicking on said item. Hold the CTRL key or SHIFT key and
+  click items to
+  select multiple.<br/>
+  After selecting the items you want to delete click <span class="bold">Delete Selected</span> to delete the selected
+  items.<br/>
+  <span class="bold">Warning: Deleting ALL items in the above list will also delete the original file!</span>
+</p>
+</body>
+</html>
