@@ -46,7 +46,7 @@ Already using **JetBrains IntelliJ**? Go ahead check-out or download the reposit
 **JetBrains IntelliJ** is available as free community edition. Download it over at [JetBrains.com](http://www.JetBrains.com/idea/#chooseYourEdition).
 Go ahead, you'll love it!
 
-You could try opening the project in a alternative IDE, but you will have to cope with figuring out how to haven the compiler
+You could try opening the project in a alternative IDE, but you will have to cope with figuring out how to have the compiler
 generate the sources for the UI.
 
 ### Minimum required JetBrains plugins for IntelliJ
@@ -73,7 +73,8 @@ Execute the Maven goal `mvn package`. This can be done using:
 ## Todo
 These things are currently on my wishlist. Have suggestions? Create an issue on the [Issue Tracker](https://github.com/Juraji/Pinterest-Downloader/issues) and I shall have a look at it.
 
+* Come up with a better name, this one is too cheesy...
 * Implement better way of aquiring a Pinterest access token
 * Rework messy UI code
 * Update built in manual to feature the **entire** application.
-* Opionally remove pins from Pinterest boards when deleting files using the Duplicates Scanner.
+* Optionally remove pins from Pinterest boards when deleting files using the Duplicates Scanner.
