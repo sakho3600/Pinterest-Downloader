@@ -7,7 +7,7 @@
     <!-- Package info -->
     <groupId>nl.juraji</groupId>
     <artifactId>pinterest-downloader</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <!-- Project info -->
