@@ -35,6 +35,8 @@ public class DuplicateFileScannerDialog extends JDialog {
   private JLabel currentBoardLabel;
   private JButton stopScanButton;
   private JCheckBox multithreadedScanningCheckBox;
+  private JSlider sampleSizeInput;
+  private JLabel sampleSizeLabel;
 
   private DuplicateImageScannerWorker imageScannerWorker;
 
@@ -60,13 +62,18 @@ public class DuplicateFileScannerDialog extends JDialog {
 
     scanActiveThrobber.setActive(false);
 
-    similarityInput.setMinimum(0);
-    similarityInput.setMaximum(100);
     similarityInput.setValue(HasherSettings.getGoalSimilarityPercentage());
     similarityLabel.setText("Similarity: " + similarityInput.getValue() + "%");
     similarityInput.addChangeListener(e -> {
       similarityLabel.setText("Similarity: " + similarityInput.getValue() + "%");
       HasherSettings.setGoalSimilarityPercentage(similarityInput.getValue());
+    });
+
+    sampleSizeInput.setValue(HasherSettings.getSampleSize());
+    sampleSizeLabel.setText("Sample Size: " + sampleSizeInput.getValue() + "px");
+    sampleSizeInput.addChangeListener(e -> {
+      sampleSizeLabel.setText("Sample Size: " + sampleSizeInput.getValue() + "px");
+      HasherSettings.setSampleSize(sampleSizeInput.getValue());
     });
 
     multithreadedScanningCheckBox.setSelected(HasherSettings.isMultiThreadingEnabled());
@@ -234,33 +241,55 @@ public class DuplicateFileScannerDialog extends JDialog {
     startScanButton = new JButton();
     startScanButton.setBorderPainted(false);
     startScanButton.setText("Start Scan");
+    startScanButton.setToolTipText("Start scanning pin images for duplicates.");
     panel2.add(startScanButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     stopScanButton = new JButton();
     stopScanButton.setEnabled(false);
     stopScanButton.setText("Stop Scan");
+    stopScanButton.setToolTipText("Stop scanning.");
     panel2.add(stopScanButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     scanActiveThrobber = new JThrobber();
     panel2.add(scanActiveThrobber, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     currentBoardLabel = new JLabel();
-    currentBoardLabel.setText("");
+    currentBoardLabel.setText("Click \"Start Scan\" to scan for duplicates.");
     panel2.add(currentBoardLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JPanel panel3 = new JPanel();
-    panel3.setLayout(new GridLayoutManager(1, 5, new Insets(0, 0, 0, 0), -1, -1));
+    panel3.setLayout(new GridLayoutManager(1, 7, new Insets(0, 0, 0, 0), -1, -1));
     panel1.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     deleteSelectedFilesButton = new JButton();
     deleteSelectedFilesButton.setText("Delete Selected");
-    panel3.add(deleteSelectedFilesButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-    final Spacer spacer2 = new Spacer();
-    panel3.add(spacer2, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+    panel3.add(deleteSelectedFilesButton, new GridConstraints(0, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     similarityInput = new JSlider();
+    similarityInput.setMajorTickSpacing(10);
+    similarityInput.setMaximum(95);
+    similarityInput.setMinimum(5);
+    similarityInput.setMinorTickSpacing(5);
+    similarityInput.setPaintTicks(true);
+    similarityInput.setToolTipText("How much of the images should be similar?");
     panel3.add(similarityInput, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, -1), new Dimension(100, -1), new Dimension(100, -1), 0, false));
-    similarityLabel = new JLabel();
-    similarityLabel.setText("");
-    panel3.add(similarityLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     multithreadedScanningCheckBox = new JCheckBox();
     multithreadedScanningCheckBox.setSelected(true);
     multithreadedScanningCheckBox.setText("Multithreaded Scanning");
+    multithreadedScanningCheckBox.setToolTipText("Scan multiple images at once. Alot faster, but also a lot more demanding on your machine.");
     panel3.add(multithreadedScanningCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    sampleSizeInput = new JSlider();
+    sampleSizeInput.setMajorTickSpacing(100);
+    sampleSizeInput.setMaximum(500);
+    sampleSizeInput.setMinimum(100);
+    sampleSizeInput.setMinorTickSpacing(50);
+    sampleSizeInput.setPaintLabels(false);
+    sampleSizeInput.setPaintTicks(true);
+    sampleSizeInput.setSnapToTicks(true);
+    sampleSizeInput.setToolTipText("A higher sample size results in better detail detection, but it also makes the scan process take longer.");
+    panel3.add(sampleSizeInput, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, -1), new Dimension(100, 16), new Dimension(100, -1), 0, false));
+    final Spacer spacer2 = new Spacer();
+    panel3.add(spacer2, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+    similarityLabel = new JLabel();
+    similarityLabel.setText("similarity label");
+    panel3.add(similarityLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    sampleSizeLabel = new JLabel();
+    sampleSizeLabel.setText("sample size label");
+    panel3.add(sampleSizeLabel, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JSplitPane splitPane1 = new JSplitPane();
     splitPane1.setDividerLocation(300);
     contentPane.add(splitPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
