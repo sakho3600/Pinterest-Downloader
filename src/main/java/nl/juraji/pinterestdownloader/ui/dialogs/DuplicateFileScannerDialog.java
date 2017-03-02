@@ -5,6 +5,8 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import nl.juraji.images.duplicates.util.HasherSettings;
 import nl.juraji.pinterestdownloader.configuration.AppIcons;
+import nl.juraji.pinterestdownloader.io.ApiHandler;
+import nl.juraji.pinterestdownloader.model.pinterest.objects.Pin;
 import nl.juraji.pinterestdownloader.ui.controllers.MainWindowController;
 import nl.juraji.pinterestdownloader.ui.renderers.DuplicateImageFileListRenderer;
 import nl.juraji.pinterestdownloader.ui.renderers.DuplicateImageSelectedFileListRenderer;
@@ -37,6 +39,7 @@ public class DuplicateFileScannerDialog extends JDialog {
   private JCheckBox multithreadedScanningCheckBox;
   private JSlider sampleSizeInput;
   private JLabel sampleSizeLabel;
+  private JCheckBox alsoDeleteOnPinterestCheckBox;
 
   private DuplicateImageScannerWorker imageScannerWorker;
 
@@ -173,7 +176,13 @@ public class DuplicateFileScannerDialog extends JDialog {
         if (choice == JOptionPane.YES_OPTION) {
           selectedValues.forEach(pathname -> {
             try {
-              FileUtils.forceDelete(new File(pathname));
+              File imageFile = new File(pathname);
+              FileUtils.forceDelete(imageFile);
+              if (alsoDeleteOnPinterestCheckBox.isSelected()) {
+                Pin pin = new Pin();
+                pin.setId(imageFile.getName().substring(0, imageFile.getName().indexOf("_")));
+                ApiHandler.getInstance().deletePin(pin);
+              }
             } catch (IOException e1) {
               e1.printStackTrace();
             }
@@ -254,11 +263,11 @@ public class DuplicateFileScannerDialog extends JDialog {
     currentBoardLabel.setText("Click \"Start Scan\" to scan for duplicates.");
     panel2.add(currentBoardLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JPanel panel3 = new JPanel();
-    panel3.setLayout(new GridLayoutManager(1, 7, new Insets(0, 0, 0, 0), -1, -1));
+    panel3.setLayout(new GridLayoutManager(1, 8, new Insets(0, 0, 0, 0), -1, -1));
     panel1.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     deleteSelectedFilesButton = new JButton();
     deleteSelectedFilesButton.setText("Delete Selected");
-    panel3.add(deleteSelectedFilesButton, new GridConstraints(0, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    panel3.add(deleteSelectedFilesButton, new GridConstraints(0, 7, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     similarityInput = new JSlider();
     similarityInput.setMajorTickSpacing(10);
     similarityInput.setMaximum(95);
@@ -290,6 +299,11 @@ public class DuplicateFileScannerDialog extends JDialog {
     sampleSizeLabel = new JLabel();
     sampleSizeLabel.setText("sample size label");
     panel3.add(sampleSizeLabel, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    alsoDeleteOnPinterestCheckBox = new JCheckBox();
+    alsoDeleteOnPinterestCheckBox.setSelected(false);
+    alsoDeleteOnPinterestCheckBox.setText("Also delete on Pinterest");
+    alsoDeleteOnPinterestCheckBox.setToolTipText("Also delete selected pins on Pinterest. WARNING: This action can not be undone!!!");
+    panel3.add(alsoDeleteOnPinterestCheckBox, new GridConstraints(0, 6, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JSplitPane splitPane1 = new JSplitPane();
     splitPane1.setDividerLocation(300);
     contentPane.add(splitPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));

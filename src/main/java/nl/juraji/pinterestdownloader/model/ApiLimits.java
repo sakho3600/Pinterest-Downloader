@@ -1,9 +1,9 @@
 package nl.juraji.pinterestdownloader.model;
 
 public class ApiLimits {
-  private int totalLimit = 0;
+  private int totalLimit = -1;
   private int callCount = 0;
-  private int remainingCount = 0;
+  private int remainingCount = -1;
 
   public int getTotalLimit() {
     return totalLimit;

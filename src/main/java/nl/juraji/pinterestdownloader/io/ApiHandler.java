@@ -9,17 +9,24 @@ import nl.juraji.pinterestdownloader.model.pinterest.objects.Pin;
 import nl.juraji.pinterestdownloader.model.pinterest.objects.PinterestApiError;
 import nl.juraji.pinterestdownloader.model.pinterest.responses.ApiResponse;
 import nl.juraji.pinterestdownloader.model.pinterest.responses.BoardsResponse;
+import nl.juraji.pinterestdownloader.model.pinterest.responses.OkResponse;
 import nl.juraji.pinterestdownloader.model.pinterest.responses.PinsResponse;
 import nl.juraji.pinterestdownloader.utils.DeadJettyLogger;
 import nl.juraji.pinterestdownloader.utils.SslTlsContextFactory;
 import nl.juraji.pinterestdownloader.utils.UriUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
+import org.eclipse.jetty.client.api.Request;
+import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.util.log.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static org.eclipse.jetty.http.HttpMethod.DELETE;
+import static org.eclipse.jetty.http.HttpMethod.GET;
 
 public final class ApiHandler {
   private static ApiHandler instance;
@@ -46,7 +53,7 @@ public final class ApiHandler {
   }
 
   public ApiLimits probeLimits() {
-    if (apiLimits.getRemainingCount() == 0) doRequest(endpointToUri("/me"), null);
+    if (apiLimits.getRemainingCount() == -1) doGet(endpointToUri("/me"), null);
     return apiLimits;
   }
 
@@ -59,19 +66,20 @@ public final class ApiHandler {
     return fetchPaged(endpointToUri(endpoint, Pin.getFields()), PinsResponse.class);
   }
 
-  public ApiLimits getApiLimits() {
-    return apiLimits;
+  public boolean deletePin(Pin pin) {
+    OkResponse okResponse = doDelete(endpointToUri("/pins/" + pin.getId() + "/"), OkResponse.class);
+    return okResponse != null;
   }
 
   private <T> List<T> fetchPaged(String requestUri, Class<? extends ApiResponse<T>> expectedResponseType) {
     List<T> list = new ArrayList<>();
-    ApiResponse<T> response = doRequest(requestUri, expectedResponseType);
+    ApiResponse<T> response = doGet(requestUri, expectedResponseType);
 
     while (response != null) {
       list.addAll(response.getData());
 
       if (response.getPage() != null && response.getPage().getNext() != null) {
-        response = doRequest(response.getPage().getNext(), expectedResponseType);
+        response = doGet(response.getPage().getNext(), expectedResponseType);
       } else {
         response = null;
       }
@@ -80,9 +88,21 @@ public final class ApiHandler {
     return list;
   }
 
-  private <T extends ApiResponse> T doRequest(String requestUri, Class<T> expectedResponseType) {
+  private <T extends ApiResponse> T doGet(String requestUri, Class<T> expectedResponseType) {
+    return doRequest(requestUri, expectedResponseType, GET);
+  }
+
+  private <T extends ApiResponse> T doDelete(String requestUri, Class<T> expectedResponseType) {
+    return doRequest(requestUri, expectedResponseType, DELETE);
+  }
+
+  private <T extends ApiResponse> T doRequest(String requestUri, Class<T> expectedResponseType, HttpMethod method) {
+    if (StringUtils.isEmpty(config.getApiAccessKey())) return null;
+
     try {
-      ContentResponse get = httpClient.GET(requestUri);
+      Request request = httpClient.newRequest(requestUri);
+      request.method(method);
+      ContentResponse get = request.send();
       String content = get.getContentAsString();
       String mediaType = get.getMediaType();
 
