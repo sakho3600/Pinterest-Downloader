@@ -34,20 +34,10 @@ public final class DeletedPinsStore {
     return deletedPins;
   }
 
-  public void addDeletedPinsByFilename(List<String> deletedPinFiles) {
-    String dirSeparator = AppData.getDirSeparator();
-    List<String> pinIds = deletedPinFiles.stream()
-        .map(filename -> filename.substring(filename.lastIndexOf(dirSeparator) + 1, filename.length()))
-        .map(filename -> filename.replaceAll("^([0-9]+).*$", "$1"))
-        .collect(Collectors.toList());
-
-    addDeletedPins(pinIds);
-  }
-
-  public void addDeletedPins(List<String> deletedPinIds) {
+  public void addDeletedPin(String deletedPinId) {
     try {
       String lSeparator = AppData.getNewlineSeparator();
-      FileUtils.writeLines(deletedPinsFile, deletedPinIds, lSeparator, true);
+      FileUtils.write(deletedPinsFile, deletedPinId + lSeparator, AppData.getCharset(), true);
     } catch (IOException e) {
       e.printStackTrace();
     }

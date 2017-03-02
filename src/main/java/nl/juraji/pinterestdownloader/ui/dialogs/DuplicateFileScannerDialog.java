@@ -177,18 +177,21 @@ public class DuplicateFileScannerDialog extends JDialog {
           selectedValues.forEach(pathname -> {
             try {
               File imageFile = new File(pathname);
+              Pin pin = new Pin();
+              pin.setId(imageFile.getName().substring(0, imageFile.getName().indexOf("_")));
+
               FileUtils.forceDelete(imageFile);
+
               if (alsoDeleteOnPinterestCheckBox.isSelected()) {
-                Pin pin = new Pin();
-                pin.setId(imageFile.getName().substring(0, imageFile.getName().indexOf("_")));
-                ApiHandler.getInstance().deletePin(pin);
+                boolean success = ApiHandler.getInstance().deletePin(pin);
+                if (success) return;
               }
+
+              DeletedPinsStore.getInstance().addDeletedPin(pin.getId());
             } catch (IOException e1) {
               e1.printStackTrace();
             }
           });
-
-          DeletedPinsStore.getInstance().addDeletedPinsByFilename(selectedValues);
 
           selectedFileList.repaint();
         }
