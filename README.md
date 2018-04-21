@@ -77,4 +77,3 @@ These things are currently on my wishlist. Have suggestions? Create an issue on 
 * Implement better way of aquiring a Pinterest access token
 * Rework messy UI code
 * Update built in manual to feature the **entire** application.
-* Optionally remove pins from Pinterest boards when deleting files using the Duplicates Scanner.
