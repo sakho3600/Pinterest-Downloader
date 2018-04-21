@@ -11,6 +11,8 @@ import nl.juraji.pinterestdownloader.ui.controllers.ProgressController;
 
 import java.awt.*;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -70,18 +72,22 @@ public class ProcessWorker {
   }
 
   private void processBoard(Board board) {
-    progressController.pushNewProcess("Retrieving pins for " + board.getName() + "...");
-    List<Pin> pins = apiHandler.getPinsForBoard(board);
+    progressController.pushNewProcess("Processing " + board.getName() + "...");
+    PinsDownloader downloader = new PinsDownloader(board, config.getDownloadTarget(), progressController::doTick);
 
-    if (pins.size() == 0) return;
+    long diff = new Date().getTime() - downloader.getBoardDir().lastModified();
+    if (config.isDoSkipRecentBoards() && diff > 86400000) {
+      progressController.pushNewProcess("Retrieving pins for " + board.getName() + "...");
+      List<Pin> pins = apiHandler.getPinsForBoard(board);
 
-    PinsDownloader downloader = new PinsDownloader(board, pins, config.getDownloadTarget(), progressController::doTick);
-    progressController.pushNewProcess("Downloading " + pins.size() + " pins on board " + board.getName() + "...", pins.size());
+      if (pins.size() == 0) return;
+      progressController.pushNewProcess("Downloading " + pins.size() + " pins on board " + board.getName() + "...", pins.size());
 
-    try {
-      downloader.start();
-    } catch (IOException e) {
-      e.printStackTrace();
+      try {
+        downloader.start(pins);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 

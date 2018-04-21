@@ -199,7 +199,7 @@
         <dependency>
             <groupId>nl.juraji.swing</groupId>
             <artifactId>javagraphics-throbber</artifactId>
-            <version>1.0</version>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>

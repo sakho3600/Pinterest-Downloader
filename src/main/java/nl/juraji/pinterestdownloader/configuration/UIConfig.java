@@ -8,6 +8,7 @@ public final class UIConfig {
   private static final String API_ACCESS_KEY = "ApiAccessKey";
   private static final String DOWNLOAD_TARGET = "DownloadTarget";
   private static final String DO_BOARD_DOWNLOAD = "DoBoardDownload";
+  private static final String DO_SKIP_RECENT_BOARDS = "DoSkipRecentBoards";
   private static final String DO_FILE_CHECK = "DoFileCheck";
   private static final String OPEN_ON_COMPLETION = "OpenOnCompletion";
 
@@ -64,6 +65,14 @@ public final class UIConfig {
     set(OPEN_ON_COMPLETION, String.valueOf(openOnCompletion));
   }
 
+  public boolean isDoSkipRecentBoards() {
+    return "true".equals(get(DO_SKIP_RECENT_BOARDS));
+  }
+
+  public void setDoSkipRecentBoards(boolean doSkipRecentBoards) {
+    set(DO_SKIP_RECENT_BOARDS, String.valueOf(doSkipRecentBoards));
+  }
+
   private String get(String key) {
     if (config.containsKey(key)) {
       return config.getProperty(key);
@@ -84,6 +93,7 @@ public final class UIConfig {
       } else {
         setDownloadTarget(new File(System.getProperty("user.home")));
         setDoBoardDownload(true);
+        setDoSkipRecentBoards(true);
         setDoFileCheck(true);
         setOpenOnCompletion(true);
       }

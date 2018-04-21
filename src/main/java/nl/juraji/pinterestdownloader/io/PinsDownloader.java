@@ -21,13 +21,11 @@ public class PinsDownloader {
       23, 24, 25, 26, 27, 28, 29, 30, 31, 34, 42, 47, 58, 60, 62, 63, 92, 124};
 
   private final List<String> existingPinIds;
-  private final List<Pin> pins;
   private final Runnable onTick;
   private final Logger logger;
   private final File boardDir;
 
-  public PinsDownloader(Board board, List<Pin> pins, File baseDownloadDir, Runnable onFileComplete) {
-    this.pins = pins;
+  public PinsDownloader(Board board, File baseDownloadDir, Runnable onFileComplete) {
     this.onTick = onFileComplete;
 
     String safeName = toFileSystemSafeName(board.getName());
@@ -36,7 +34,11 @@ public class PinsDownloader {
     existingPinIds = new ArrayList<>();
   }
 
-  public void start() throws IOException {
+  public File getBoardDir() {
+    return boardDir;
+  }
+
+  public void start(List<Pin> pins) throws IOException {
     Files.createDirectories(boardDir.toPath());
     findExistingPins();
     pins.forEach(this::downloadAndSave);
