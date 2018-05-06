@@ -1,5 +1,7 @@
 # Pinterest Downloader
 
+> **This version of Pinterest Downloader is deprecated, please checkout [Juraji/Pinterest-Downloader-2](https://github.com/Juraji/Pinterest-Downloader-2).**
+
 ## Table of contents
 
 ## About
